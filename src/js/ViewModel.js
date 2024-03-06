@@ -48,7 +48,28 @@ const ViewModel = function() {
     }
 
     function onMove(direction) {
+
+        function setSelected(point, selected) {
+            getCellStateAt(point.x, point.y).selected = selected
+        }
+
+        function select(point) {
+            setSelected(point, true)
+            viewState.selectedPoint = point
+        }
+
+        function deselect(point) {
+            setSelected(point, false)
+            viewState.selectedPoint = null
+        }
+
         if (direction.length === undefined || direction.length !== 2) return
+
+        if (viewState.selectedPoint === null) {
+            select(pointOf(0, 0))
+            fireStateUpdate()
+            return
+        }
 
         const xOffset = +direction[0]
         const yOffset = +direction[1]
@@ -64,18 +85,17 @@ const ViewModel = function() {
         point.x += xOffset
         point.y += yOffset
 
-        if (point.x < 0 || point.x >= getWidth() || point.y < 0 || point.y >= getHeight()) {
+        if (!isInRange(point.x, 0, getWidth()) || !isInRange(point.y, 0, getHeight())) {
             return
         }
 
         const prevPoint = viewState.selectedPoint
 
         if (prevPoint !== null) {
-            getCellStateAt(prevPoint.x, prevPoint.y).selected = false
+            deselect(prevPoint)
         }
 
-        viewState.selectedPoint = point
-        getCellStateAt(point.x, point.y).selected = true
+        select(point)
 
         fireStateUpdate()
     }
