@@ -3,7 +3,7 @@ const viewModel = ViewModel()
 
 function start() {
     viewModel.setStateUpdateListener(onViewStateUpdated)
-    viewModel.setGridSize(15)
+    viewModel.setGridSize(3)
 
     document.addEventListener("keydown", handleKeyPress)
 }

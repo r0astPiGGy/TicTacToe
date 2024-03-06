@@ -4,14 +4,51 @@
     <meta charset="UTF-8">
     <title>Tic Tac Toe</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
+<div class="wrapper">
     <div id="container">
-        <div class="wrapper">
+        <div class="flex-column">
+            <p id="current-state">На 23 ходу победил X</p>
             <div id="grid">
+            </div>
+            <p id="player-list">Игроки: X, O, :), :(, S, D, E</p>
+        </div>
+        <div id="sidebar">
+            <p id="title">Крестики-Нолики</p>
+
+            <div id="messages">
+<!--                <p>Ход 1 сделал X</p>-->
+<!--                <p>Ход 2 сделал 0</p>-->
+<!--                <p>Ход 3 сделал X</p>-->
+<!--                <p>Ход 4 сделал 0</p>-->
+<!--                <p>Ход 5 сделал X</p>-->
+            </div>
+
+            <div id="input-container">
+                <div id="input-row">
+                    <div class="input-layout">
+                        <label for="board-size">Размер сетки</label>
+                        <input type="text" name="board-size" id="board-size">
+                    </div>
+                    <div class="input-layout">
+                        <label for="board-size">Комбинация</label>
+                        <input type="text" name="combination" id="combination">
+                    </div>
+                    <div class="input-layout">
+                        <label for="board-size">Игроки</label>
+                        <input type="text" name="players" id="players">
+                    </div>
+                </div>
+                <p id="error">Ошибка вышла</p>
+                <button>Новая игра</button>
             </div>
         </div>
     </div>
+</div>
 </body>
 <script src="./js/Utils.js"></script>
 <script src="./js/Model.js"></script>

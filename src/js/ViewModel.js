@@ -85,7 +85,7 @@ const ViewModel = function() {
         point.x += xOffset
         point.y += yOffset
 
-        if (!isInRange(point.x, 0, getWidth()) || !isInRange(point.y, 0, getHeight())) {
+        if (point.x < 0 || point.x >= getWidth() || point.y < 0 || point.y >= getHeight()) {
             return
         }
 
