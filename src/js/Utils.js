@@ -8,3 +8,27 @@ function shuffle(array) {
     }
     return array
 }
+
+function getIntegerFromInput(input) {
+    const value = input.value
+
+    if (value === "") throw "Заполните все поля"
+
+    const number = +value
+
+    if (isNaN(number)) throw "Некорректное число"
+
+    return number
+}
+
+function requirePositive(number) {
+    if (number >= 0) return number
+
+    throw "Введите положительное число"
+}
+
+
+
+function requireInRange(number, min, max) {
+
+}

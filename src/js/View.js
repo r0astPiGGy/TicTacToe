@@ -9,13 +9,30 @@ const playersInput = document.querySelector("#players")
 const combinationInput = document.querySelector("#combination")
 const boardSizeInput = document.querySelector("#board-size")
 
+const errorView = document.querySelector("#error")
+
 const viewModel = ViewModel()
 
 function start() {
     viewModel.setStateUpdateListener(onViewStateUpdated)
     viewModel.setGameParams(3, 3, 2)
 
+    startButton.addEventListener("click", handleStartButtonPress)
     document.addEventListener("keydown", handleKeyPress)
+}
+
+function handleStartButtonPress() {
+    errorView.textContent = " "
+
+    try {
+        const combination = getIntegerFromInput(combinationInput)
+        const players = getIntegerFromInput(playersInput)
+        const size = getIntegerFromInput(boardSizeInput)
+
+        viewModel.setGameParams(size, combination, players)
+    } catch (e) {
+        errorView.textContent = e
+    }
 }
 
 function handleKeyPress(event) {
@@ -45,6 +62,7 @@ function onViewStateUpdated(viewState) {
     updateGrid(viewState)
     updateMessages(viewState)
     updatePlayerList(viewState)
+    updateInputFields(viewState)
 }
 
 function updateGrid(viewState) {
@@ -74,6 +92,14 @@ function updatePlayerList(viewState) {
 
     const playerList = viewState.players.join(", ")
     playerListView.innerHTML = `Игроки: ${playerList}`
+}
+
+function updateInputFields(viewState) {
+    if (viewState.round > 0) return
+
+    boardSizeInput.value = viewState.grid.length
+    playersInput.value = viewState.players.length
+    combinationInput.value = viewState.combination
 }
 
 function createCell(state, x, y) {
