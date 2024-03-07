@@ -36,6 +36,8 @@ function handleStartButtonPress() {
 }
 
 function handleKeyPress(event) {
+    if (document.activeElement.tagName !== "BODY") return
+
     let shouldCancelEvent = true
 
     switch (event.key) {
@@ -59,10 +61,25 @@ function handleKeyPress(event) {
 }
 
 function onViewStateUpdated(viewState) {
+    updateGameState(viewState)
     updateGrid(viewState)
     updateMessages(viewState)
     updatePlayerList(viewState)
     updateInputFields(viewState)
+}
+
+function updateGameState(viewState) {
+    let msg
+
+    if (viewState.isDraw) {
+        msg = `На ходу ${viewState.round} ничья`
+    } else if (viewState.winner !== null) {
+        msg = `На ходу ${viewState.round} победил ${viewState.winner}`
+    } else {
+        msg = `Ход ${viewState.round + 1}. Сейчас ходит ${viewState.nextPlayer}`
+    }
+
+    stateMessageView.innerHTML = msg
 }
 
 function updateGrid(viewState) {
@@ -75,7 +92,6 @@ function updateGrid(viewState) {
 }
 
 function updateMessages(viewState) {
-    stateMessageView.innerHTML = `Ход ${viewState.round + 1}. Очередь ${viewState.nextPlayer}`
     messageListView.innerHTML = ""
     Array.from({ length: viewState.round }, (v, i) => {
         const msg = `Ход ${i + 1} сделал ${viewState.players[i % viewState.players.length]}`

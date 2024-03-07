@@ -35,6 +35,10 @@ function pointOf(x, y) {
     return { x: x, y: y }
 }
 
+function isGameEnded(viewState) {
+    return viewState.winner !== null || viewState.isDraw
+}
+
 function viewStateOf(grid, players) {
     return {
         grid: grid,

@@ -50,7 +50,13 @@ const ViewModel = function() {
         fireStateUpdate()
     }
 
+    function determineWinner() {
+
+    }
+
     function onCellClick(x, y) {
+        if (isGameEnded(viewState)) return
+
         const state = getCellStateAt(x, y)
 
         if (!isEmpty(state)) return
@@ -60,6 +66,12 @@ const ViewModel = function() {
         viewState.currentPlayer = players[(viewState.round++) % players.length]
         viewState.nextPlayer = players[(viewState.round) % players.length]
         state.content = viewState.currentPlayer
+
+        state.winner = determineWinner()
+
+        if (viewState.winner === null && viewState.round === getWidth() * getHeight()) {
+            viewState.isDraw = true
+        }
 
         fireStateUpdate()
     }
