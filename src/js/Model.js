@@ -9,6 +9,13 @@ const LEFT = [-1, 0]
 const EMOJI_RANGE = [128513, 128591]
 const STANDARD_PLAYERS = ['X', 'O']
 
+const Constraints = {
+    MIN_PLAYERS: 2,
+    MAX_GRID_SIZE: 25,
+    MIN_GRID_SIZE: 3,
+    MIN_COMBINATION: 2,
+}
+
 const GameState = {
     PLAYING: 0,
     DRAW: 1,

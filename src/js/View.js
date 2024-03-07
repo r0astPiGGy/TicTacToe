@@ -22,7 +22,7 @@ function start() {
 }
 
 function handleStartButtonPress() {
-    errorView.textContent = " "
+    errorView.innerHTML = "&nbsp;"
 
     try {
         const combination = getIntegerFromInput(combinationInput)

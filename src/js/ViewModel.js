@@ -26,6 +26,15 @@ const ViewModel = function() {
     }
 
     function setGameParams(size, combination, players) {
+        ;[size, combination, players].forEach(requirePositive)
+
+        if (size > Constraints.MAX_GRID_SIZE) throw `Размер сетки не должен привышать ${Constraints.MAX_GRID_SIZE}`
+        if (size < Constraints.MIN_GRID_SIZE) throw `Размер сетки должен быть больше ${Constraints.MIN_GRID_SIZE}`
+        if (players < Constraints.MIN_PLAYERS) throw `Игроков должно быть не меньше ${Constraints.MIN_PLAYERS}`
+        if (combination < Constraints.MIN_COMBINATION) throw `Комбинация должна быть больше ${Constraints.MIN_COMBINATION}`
+        if (players > size) throw "Количество игроков не должно превышать размер сетки"
+        if (combination > size) throw "Комбинация не должна превышать размер сетки"
+
         const playerList = createPlayers(players)
 
         const grid = Array
@@ -35,6 +44,7 @@ const ViewModel = function() {
             )
 
         viewState = viewStateOf(grid, playerList)
+        viewState.combination = combination
         viewState.nextPlayer = viewState.players[0]
 
         fireStateUpdate()

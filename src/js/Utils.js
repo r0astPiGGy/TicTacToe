@@ -26,9 +26,3 @@ function requirePositive(number) {
 
     throw "Введите положительное число"
 }
-
-
-
-function requireInRange(number, min, max) {
-
-}
