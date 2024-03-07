@@ -2,11 +2,18 @@ const gridView = document.querySelector("#grid")
 const messageListView = document.querySelector("#messages")
 const stateMessageView = document.querySelector("#current-state")
 const playerListView = document.querySelector("#player-list")
+
+const startButton = document.querySelector("#start-button")
+
+const playersInput = document.querySelector("#players")
+const combinationInput = document.querySelector("#combination")
+const boardSizeInput = document.querySelector("#board-size")
+
 const viewModel = ViewModel()
 
 function start() {
     viewModel.setStateUpdateListener(onViewStateUpdated)
-    viewModel.setGameParams(3, 3, 9)
+    viewModel.setGameParams(3, 3, 2)
 
     document.addEventListener("keydown", handleKeyPress)
 }
@@ -36,22 +43,8 @@ function handleKeyPress(event) {
 
 function onViewStateUpdated(viewState) {
     updateGrid(viewState)
-
-    stateMessageView.innerHTML = `Ход ${viewState.round + 1}. Очередь ${viewState.nextPlayer}`
-
-    if (viewState.currentPlayer !== null) {
-        const msg = `Ход ${viewState.round} сделал ${viewState.currentPlayer}`
-
-        const p = document.createElement("p")
-        p.innerHTML = msg
-
-        messageListView.append(p)
-    } else {
-        messageListView.innerHTML = ""
-    }
-
-    const playerList = viewState.players.join(", ")
-    playerListView.innerHTML = `Игроки: ${playerList}`
+    updateMessages(viewState)
+    updatePlayerList(viewState)
 }
 
 function updateGrid(viewState) {
@@ -61,6 +54,26 @@ function updateGrid(viewState) {
         const cells = row.map((cell, x) => createCell(cell, x, y))
         gridView.append(createRow(cells))
     })
+}
+
+function updateMessages(viewState) {
+    stateMessageView.innerHTML = `Ход ${viewState.round + 1}. Очередь ${viewState.nextPlayer}`
+    messageListView.innerHTML = ""
+    Array.from({ length: viewState.round }, (v, i) => {
+        const msg = `Ход ${i + 1} сделал ${viewState.players[i % viewState.players.length]}`
+
+        const p = document.createElement("p")
+        p.innerHTML = msg
+
+        messageListView.append(p)
+    })
+}
+
+function updatePlayerList(viewState) {
+    if (viewState.currentPlayer !== null) return
+
+    const playerList = viewState.players.join(", ")
+    playerListView.innerHTML = `Игроки: ${playerList}`
 }
 
 function createCell(state, x, y) {

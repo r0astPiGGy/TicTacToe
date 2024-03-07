@@ -9,6 +9,12 @@ const LEFT = [-1, 0]
 const EMOJI_RANGE = [128513, 128591]
 const STANDARD_PLAYERS = ['X', 'O']
 
+const GameState = {
+    PLAYING: 0,
+    DRAW: 1,
+    PLAYER_WON: 2,
+}
+
 function createPlayers(size) {
     if (size <= STANDARD_PLAYERS.length) return STANDARD_PLAYERS
 
