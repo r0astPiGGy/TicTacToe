@@ -1,15 +1,14 @@
-const grid = document.querySelector("#grid")
+const gridView = document.querySelector("#grid")
+const messageListView = document.querySelector("#messages")
+const stateMessageView = document.querySelector("#current-state")
+const playerListView = document.querySelector("#player-list")
 const viewModel = ViewModel()
 
 function start() {
     viewModel.setStateUpdateListener(onViewStateUpdated)
-    viewModel.setGridSize(3)
+    viewModel.setGameParams(3, 3, 9)
 
     document.addEventListener("keydown", handleKeyPress)
-}
-
-function onViewStateUpdated(viewState) {
-    updateGrid(viewState)
 }
 
 function handleKeyPress(event) {
@@ -35,12 +34,32 @@ function handleKeyPress(event) {
     }
 }
 
+function onViewStateUpdated(viewState) {
+    updateGrid(viewState)
+
+    stateMessageView.innerHTML = `Ход ${viewState.round + 1}. Очередь ${viewState.nextPlayer}`
+
+    if (viewState.currentPlayer !== null) {
+        const msg = `Ход ${viewState.round} сделал ${viewState.currentPlayer}`
+
+        const p = document.createElement("p")
+        p.innerHTML = msg
+
+        messageListView.append(p)
+    } else {
+        messageListView.innerHTML = ""
+    }
+
+    const playerList = viewState.players.join(", ")
+    playerListView.innerHTML = `Игроки: ${playerList}`
+}
+
 function updateGrid(viewState) {
-    grid.innerHTML = ""
+    gridView.innerHTML = ""
 
     viewState.grid.forEach((row, y) => {
         const cells = row.map((cell, x) => createCell(cell, x, y))
-        grid.append(createRow(cells))
+        gridView.append(createRow(cells))
     })
 }
 
@@ -55,18 +74,27 @@ function createCell(state, x, y) {
         cell.classList.add("selected")
     }
 
-    cell.textContent = state.content
-
-    cell.addEventListener("click", handleCellClick)
+    cell.innerHTML = `
+        <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 64 64" 
+            preserveAspectRatio="xMinYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+            >
+            <text
+                x="50%"
+                y="50%"
+                dominant-baseline="central"
+                text-anchor="middle"
+                font-size="32"
+                fill="black"
+            >${state.content}</text>
+      </svg>
+    `
+    cell.addEventListener("click", () => viewModel.onCellClick(x, y))
 
     return cell
-}
-
-function handleCellClick(event) {
-    const x = +event.target.dataset.x;
-    const y = +event.target.dataset.y;
-
-    viewModel.onCellClick(x, y)
 }
 
 function createRow(cells) {

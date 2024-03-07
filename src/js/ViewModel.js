@@ -25,14 +25,17 @@ const ViewModel = function() {
         stateUpdateListener(viewState)
     }
 
-    function setGridSize(size) {
+    function setGameParams(size, combination, players) {
+        const playerList = createPlayers(players)
+
         const grid = Array
             .from(
                 {length: size},
                 () => Array.from({length: size}, () => cellStateOf())
             )
 
-        viewState = viewStateOf(grid)
+        viewState = viewStateOf(grid, playerList)
+        viewState.nextPlayer = viewState.players[0]
 
         fireStateUpdate()
     }
@@ -42,7 +45,11 @@ const ViewModel = function() {
 
         if (!isEmpty(state)) return
 
-        state.content = ['X', '0'][(viewState.round++) % 2]
+        const players = viewState.players
+
+        viewState.currentPlayer = players[(viewState.round++) % players.length]
+        viewState.nextPlayer = players[(viewState.round) % players.length]
+        state.content = viewState.currentPlayer
 
         fireStateUpdate()
     }
@@ -113,13 +120,12 @@ const ViewModel = function() {
         if (point === null) return
 
         viewState.selectedPoint = null
-
         getCellStateAt(point.x, point.y).selected = false
         fireStateUpdate()
     }
 
     return {
-        setGridSize: setGridSize,
+        setGameParams: setGameParams,
         setStateUpdateListener: setStateUpdateListener,
         onMove: onMove,
         onSelectedInteract: onSelectedInteract,

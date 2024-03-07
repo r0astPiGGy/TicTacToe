@@ -12,6 +12,87 @@ body {
     box-sizing: border-box;
 }
 
+input[type="text"] {
+    background: #2f2f2f;
+    border-radius: 3px;
+    border: #575757 1px solid;
+    width: 100%;
+    padding: 8px 4px;
+    font-size: 20px;
+}
+
+#error {
+    color: #e12a2a;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+#messages {
+    overflow: scroll;
+    flex-grow: 1;
+    background: #333;
+    width: 100%;
+}
+
+#messages > p {
+    padding: 8px 16px;
+}
+
+#messages > p:nth-child(odd) {
+    background: #444444;
+}
+
+button {
+    width: 100%;
+    color: black;
+    padding: 12px;
+    font-size: 24px;
+}
+
+#sidebar {
+    background: #252525;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    height: 100%;
+    border-radius: 10px;
+
+    gap: 48px;
+
+    padding: 48px 0;
+}
+
+label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #757575;
+}
+
+.selected {
+    padding: 0;
+    border: #ff107c 2px solid;
+}
+
+.cell {
+    color: black;
+    flex-basis: 100%;
+    /*font-size: 10vw;*/
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    text-align: center;
+    background: #f5f5f5;
+}
+
+.cell:not(.selected) {
+    padding: 1px;
+    border: #2f2f2f 1px solid;
+}
+
 .flex-column {
     display: flex;
     flex-direction: column;
@@ -56,33 +137,22 @@ body {
     width: 100%;
 }
 
-input {
-    color: black;
-    width: 100%;
-    padding: 8px 4px;
-    font-size: 20px;
+input[type="text"]:focus {
+    outline: none;
+}
+
+button {
+
+}
+
+button:hover {
+    cursor: pointer;
 }
 
 #input-row {
     display: flex;
     flex-direction: row;
     gap: 16px;
-}
-
-#messages {
-    overflow: scroll;
-    flex-grow: 1;
-    background: #333;
-    width: 100%;
-}
-
-#messages > p {
-    padding: 8px 16px;
-    background: #444444;
-}
-
-#messages > p:nth-child(odd) {
-    background: #363636;
 }
 
 #input-row > * {
@@ -95,33 +165,6 @@ input {
     gap: 8px;
 }
 
-button {
-    width: 100%;
-    color: black;
-    padding: 12px;
-    font-size: 24px;
-}
-
-#error {
-    color: #e12a2a;
-    font-size: 14px;
-    margin-bottom: 12px;
-}
-
-#sidebar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    height: 100%;
-    background: #252525;
-    border-radius: 10px;
-
-    gap: 48px;
-
-    padding: 48px 0;
-}
-
 #sidebar > * {
     margin: 0 16px;
 }
@@ -131,34 +174,7 @@ button {
     flex-direction: row;
 }
 
-label {
-    font-weight: 600;
-    font-size: 13px;
-    color: #757575;
-}
-
-.cell {
-    color: black;
-    flex-basis: 100%;
-    /*font-size: 10vw;*/
-    user-select: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    aspect-ratio: 1;
-    text-align: center;
-    background: #f5f5f5;
-    border: #2f2f2f 1px solid;
-    padding: 1px;
-}
-
 
 .cell:not(.selected) {
     /*border: transparent 2px solid;*/
-}
-
-.selected {
-    /*background: #343434;*/
-    padding: 0;
-    border: #ff107c 2px solid;
 }
