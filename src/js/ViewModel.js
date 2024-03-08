@@ -19,7 +19,7 @@ const ViewModel = function() {
         stateUpdateListener = listener
     }
 
-    function fireStateUpdate() {
+    function fireStateUpdatedEvent() {
         if (stateUpdateListener === null) return
 
         stateUpdateListener(viewState)
@@ -28,7 +28,7 @@ const ViewModel = function() {
     function setGameParams(size, combination, players) {
         ;[size, combination, players].forEach(requirePositive)
 
-        if (size > Constraints.MAX_GRID_SIZE) throw `Размер сетки не должен привышать ${Constraints.MAX_GRID_SIZE}`
+        if (size > Constraints.MAX_GRID_SIZE) throw `Размер сетки не должен превышать ${Constraints.MAX_GRID_SIZE}`
         if (size < Constraints.MIN_GRID_SIZE) throw `Размер сетки должен быть больше ${Constraints.MIN_GRID_SIZE}`
         if (players < Constraints.MIN_PLAYERS) throw `Игроков должно быть не меньше ${Constraints.MIN_PLAYERS}`
         if (combination < Constraints.MIN_COMBINATION) throw `Комбинация должна быть больше ${Constraints.MIN_COMBINATION}`
@@ -47,11 +47,56 @@ const ViewModel = function() {
         viewState.combination = combination
         viewState.nextPlayer = viewState.players[0]
 
-        fireStateUpdate()
+        fireStateUpdatedEvent()
     }
 
-    function determineWinner() {
+    function performHorizontalCheck(player) {
+        return performHorizontalCheckIn(viewState.grid, player)
+    }
 
+    function performVerticalCheck(player) {
+        return performHorizontalCheckIn(transpose(viewState.grid), player)
+    }
+
+    function performHorizontalCheckIn(grid, player) {
+        const rowToCheck = player.repeat(viewState.combination)
+
+        return grid
+            .map(row => row.map(it => it.content).join(""))
+            .some(it => it.includes(rowToCheck))
+    }
+
+    function performMainDiagonalCheck(player) {
+        return performDiagonalCheck(player, (i, j) => i + 1 - getWidth() + j)
+    }
+
+    function performAntiDiagonalCheck(player) {
+        return performDiagonalCheck(player, (i, j, extendedLength) => extendedLength - i - 1 - j)
+    }
+
+    function performDiagonalCheck(player, mutateIndexFn) {
+        const grid = viewState.grid
+        const rowToCheck = player.repeat(viewState.combination)
+
+        const extendedLength = 2 * getWidth() - 1
+
+        return Array.from({ length: extendedLength })
+            .map((_, i) => grid.reduce((acc, row, j) => {
+                const index = mutateIndexFn(i, j, extendedLength)
+                if (index < 0 || index >= getWidth()) return acc
+
+                return acc + row[index].content
+            }, ""))
+            .some(it => it.includes(rowToCheck))
+    }
+
+    function isWinner(player) {
+        return [
+            performMainDiagonalCheck(player),
+            performAntiDiagonalCheck(player),
+            performVerticalCheck(player),
+            performHorizontalCheck(player)
+        ].some(result => result)
     }
 
     function onCellClick(x, y) {
@@ -62,18 +107,20 @@ const ViewModel = function() {
         if (!isEmpty(state)) return
 
         const players = viewState.players
+        const clickedPlayer = players[(viewState.round) % players.length]
 
-        viewState.currentPlayer = players[(viewState.round++) % players.length]
+        state.content = clickedPlayer
+
+        viewState.round++
+        viewState.currentPlayer = clickedPlayer
         viewState.nextPlayer = players[(viewState.round) % players.length]
-        state.content = viewState.currentPlayer
-
-        state.winner = determineWinner()
+        viewState.winner = isWinner(clickedPlayer) ? clickedPlayer : null
 
         if (viewState.winner === null && viewState.round === getWidth() * getHeight()) {
             viewState.isDraw = true
         }
 
-        fireStateUpdate()
+        fireStateUpdatedEvent()
     }
 
     function onMove(direction) {
@@ -96,7 +143,7 @@ const ViewModel = function() {
 
         if (viewState.selectedPoint === null) {
             select(pointOf(0, 0))
-            fireStateUpdate()
+            fireStateUpdatedEvent()
             return
         }
 
@@ -126,7 +173,7 @@ const ViewModel = function() {
 
         select(point)
 
-        fireStateUpdate()
+        fireStateUpdatedEvent()
     }
 
     function onSelectedInteract() {
@@ -143,7 +190,7 @@ const ViewModel = function() {
 
         viewState.selectedPoint = null
         getCellStateAt(point.x, point.y).selected = false
-        fireStateUpdate()
+        fireStateUpdatedEvent()
     }
 
     return {

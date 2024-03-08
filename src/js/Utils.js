@@ -9,6 +9,10 @@ function shuffle(array) {
     return array
 }
 
+function transpose(matrix) {
+    return matrix[0].map((columns, i) => matrix.map(row => row[i]))
+}
+
 function getIntegerFromInput(input) {
     const value = input.value
 
