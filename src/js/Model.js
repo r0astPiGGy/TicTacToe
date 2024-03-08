@@ -16,12 +16,6 @@ const Constraints = {
     MIN_COMBINATION: 2,
 }
 
-const GameState = {
-    PLAYING: 0,
-    DRAW: 1,
-    PLAYER_WON: 2,
-}
-
 function createPlayers(size) {
     if (size <= STANDARD_PLAYERS.length) return STANDARD_PLAYERS
 
