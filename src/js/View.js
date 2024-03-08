@@ -46,6 +46,7 @@ function handleKeyPress(event) {
         case "ArrowRight": viewModel.onMove(RIGHT); break;
         case "ArrowLeft": viewModel.onMove(LEFT); break;
         case "Escape": viewModel.onDeselect(); break;
+        case "r": handleStartButtonPress(); break;
         case "Enter":
         case " ":
             viewModel.onSelectedInteract()
